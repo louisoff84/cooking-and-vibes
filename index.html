@@ -1,1 +1,80 @@
-index.html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Recettes 10k</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 20px; }
+        .header { display: flex; justify-content: space-between; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        .card { padding: 15px; border: 1px solid #ddd; border-radius: 5px; background: #fff; }
+        #sentinel { height: 50px; text-align: center; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 id="welcome">Chargement...</h1>
+        <button onclick="logout()">Déconnexion</button>
+    </div>
+
+    <input type="text" id="search" placeholder="Filtrer parmi 10 000 recettes..." 
+           style="width:100%; padding:12px; margin-top:20px;" oninput="search()">
+
+    <div id="grid" class="grid"></div>
+    <div id="sentinel">Chargement de la suite...</div>
+
+    <script>
+        // --- SÉCURITÉ : VÉRIFIER LA CONNEXION ---
+        const currentUser = localStorage.getItem("session_user");
+        if (!currentUser) {
+            window.location.href = "login.html";
+        } else {
+            document.getElementById('welcome').innerText = "Cuisine de " + currentUser;
+        }
+
+        function logout() {
+            localStorage.removeItem("session_user");
+            window.location.href = "login.html";
+        }
+
+        // --- DONNÉES & CHARGEMENT ---
+        const DB = Array.from({ length: 10000 }, (_, i) => ({
+            id: i + 1,
+            nom: `Recette n°${i + 1}`,
+            details: "Mélangez et savourez !"
+        }));
+
+        let displayed = 0;
+        let filtered = [...DB];
+        const step = 30;
+
+        function loadMore() {
+            const grid = document.getElementById('grid');
+            const batch = filtered.slice(displayed, displayed + step);
+            batch.forEach(r => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `<strong>${r.nom}</strong><p>${r.details}</p>`;
+                grid.appendChild(div);
+            });
+            displayed += step;
+        }
+
+        function search() {
+            const q = document.getElementById('search').value.toLowerCase();
+            filtered = DB.filter(r => r.nom.toLowerCase().includes(q));
+            displayed = 0;
+            document.getElementById('grid').innerHTML = '';
+            loadMore();
+        }
+
+        // Infinite Scroll
+        const obs = new IntersectionObserver(e => {
+            if(e[0].isIntersecting && displayed < filtered.length) loadMore();
+        });
+        obs.observe(document.getElementById('sentinel'));
+    </script>
+</body>
+</html>
+
