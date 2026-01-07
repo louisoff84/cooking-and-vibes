@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; }
+        .box { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #3498db; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Connexion</h2>
+        <input type="text" id="user" placeholder="Nom d'utilisateur">
+        <input type="password" id="pass" placeholder="Mot de passe">
+        <button onclick="login()">Se connecter</button>
+        <p><a href="register.html">Pas de compte ? S'inscrire</a></p>
+    </div>
+
+    <script>
+        function login() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            const storedPass = localStorage.getItem(`user_${u}`);
+
+            if (storedPass && storedPass === p) {
+                // On crée une "session" temporaire
+                localStorage.setItem("session_user", u);
+                window.location.href = "index.html";
+            } else {
+                alert("Identifiants incorrects sur ce navigateur.");
+            }
+        }
+    </script>
+</body>
+</html>
