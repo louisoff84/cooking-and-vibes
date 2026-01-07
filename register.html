@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; }
+        .box { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Créer un compte</h2>
+        <input type="text" id="user" placeholder="Nom d'utilisateur">
+        <input type="password" id="pass" placeholder="Mot de passe">
+        <button onclick="register()">S'inscrire</button>
+        <p><a href="login.html">Déjà un compte ? Connectez-vous</a></p>
+    </div>
+
+    <script>
+        function register() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            if(!u || !p) return alert("Remplis tout !");
+            
+            // On stocke l'utilisateur avec son mot de passe
+            localStorage.setItem(`user_${u}`, p);
+            alert("Compte créé avec succès !");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>
